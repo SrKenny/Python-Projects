@@ -1,11 +1,17 @@
 from ninja import Router, Query
-from .schemas import LivrosSchema, AvaliacaoSchema, FiltrosSortear
+from .schemas import LivrosSchema, AvaliacaoSchema, FiltrosSortear, LivrosViewSchema
 from .models import Livros, Categorias
+from typing import List
 
 livros_router = Router()
 
+@livros_router.get('/', response={200: List[LivrosViewSchema]})
+def get_livro(request):
+    livros = Livros.objects.all()
+    return livros
 
-@livros_router.get('/')
+
+@livros_router.post('/')
 def create_livro(request, livro_schema: LivrosSchema):
     nome = livro_schema.dict()['nome']
     streaming = livro_schema.dict() ['streaming']
